@@ -81,7 +81,7 @@ class _LeavePageState extends State<LeavePage> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(top: 10, left: 10, bottom: 10),
-            child: Text('รายการใบลาที่ยังไม่อนุมัติ (10 รายการ)'),
+            child: Text('รายการใบลาที่ยังไม่อนุมัติ (${items.length} รายการ)'),
           ),
           Expanded(
             child: ListView.builder(
@@ -98,9 +98,8 @@ class _LeavePageState extends State<LeavePage> {
                   child: ListTile(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) => LeaveInfoPage(
-                              item['leave_id'].toString(),
-                              '${item['first_name']} ${item['last_name']}'),
+                          builder: (BuildContext context) =>
+                              LeaveInfoPage(item),
                           fullscreenDialog: false));
                     },
                     title: Text(
