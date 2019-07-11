@@ -96,11 +96,16 @@ class _LeavePageState extends State<LeavePage> {
                       color: Colors.purple[50],
                       borderRadius: BorderRadius.all(Radius.circular(5))),
                   child: ListTile(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              LeaveInfoPage(item),
-                          fullscreenDialog: false));
+                    onTap: () async {
+                      var rs = await Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  LeaveInfoPage(item),
+                              fullscreenDialog: false));
+
+                      if (rs != null) {
+                        getLeaveDraft();
+                      }
                     },
                     title: Text(
                       '${item['first_name']} ${item['last_name']}',
@@ -125,6 +130,10 @@ class _LeavePageState extends State<LeavePage> {
             ),
           )
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => getLeaveDraft(),
+        child: Icon(Icons.refresh),
       ),
     );
   }

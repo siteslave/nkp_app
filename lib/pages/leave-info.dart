@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:nkp_leave/api.dart';
 import 'package:nkp_leave/helper.dart';
+
+import 'dart:convert' as convert;
 
 class LeaveInfoPage extends StatefulWidget {
   final Map leave;
@@ -11,6 +16,9 @@ class LeaveInfoPage extends StatefulWidget {
 
 class _LeaveInfoPageState extends State<LeaveInfoPage> {
   Helper helper = Helper();
+  final storage = new FlutterSecureStorage();
+
+  Api api = Api();
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +116,8 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
             Expanded(
               child: RaisedButton(
                 padding: EdgeInsets.all(20),
-                onPressed: () {},
+                onPressed: () => changeStatus(
+                    widget.leave['leave_id'].toString(), 'APPROVED'),
                 child: Text(
                   'อนุมัติ',
                   style: TextStyle(
@@ -123,7 +132,8 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
               child: RaisedButton(
                 padding: EdgeInsets.all(20),
                 color: Colors.red,
-                onPressed: () {},
+                onPressed: () =>
+                    changeStatus(widget.leave['leave_id'].toString(), 'DENIED'),
                 child: Text('ไม่อนุมัติ',
                     style: TextStyle(
                         fontSize: 20,
@@ -170,5 +180,56 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
     //     child: Text('ข้อมูลการลา'),
     //   ),
     // );
+  }
+
+  Future changeStatus(String leaveId, String status) async {
+    try {
+      String token = await storage.read(key: 'token');
+      var rs = await api.changeStatus(token, leaveId, status);
+      if (rs.statusCode == 200) {
+        var decoded = convert.jsonDecode(rs.body);
+
+        if (decoded['ok']) {
+          Fluttertoast.showToast(
+              msg: "บันทึกข้อมูลเสร็จแล้ว",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIos: 3,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 18);
+
+          Navigator.of(context).pop(true);
+        } else {
+          Fluttertoast.showToast(
+              msg: "${decoded['error']}",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIos: 3,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 18);
+        }
+      } else {
+        Fluttertoast.showToast(
+            msg: "เกิดข้อผิดพลาดในการเชื่อมต่อ",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIos: 3,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 18);
+      }
+    } catch (error) {
+      print(error);
+      Fluttertoast.showToast(
+          msg: "เกิดข้อผิดพลาด",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIos: 3,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 18);
+    }
   }
 }

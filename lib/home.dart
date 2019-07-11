@@ -26,10 +26,6 @@ class _HomePageState extends State<HomePage> {
       body: _selectedIndex == 0
           ? LeavePage()
           : _selectedIndex == 1 ? EmployeePage() : ProfilePage(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.refresh),
-      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (int index) {
