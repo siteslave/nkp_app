@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nkp_leave/api.dart';
+import 'dart:convert' as convert;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -6,6 +8,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+  Api api = Api();
+
+  TextEditingController ctrlUsername = TextEditingController();
+  TextEditingController ctrlPassword = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,27 +49,45 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 margin: EdgeInsets.all(10),
                 padding: EdgeInsets.all(20),
-                height: 280,
+                // height: 280,
                 width: 400,
                 decoration: BoxDecoration(
                     color: Colors.purple[100],
                     borderRadius: BorderRadius.circular(10)),
                 child: Form(
+                  key: _formKey,
                   child: Column(
                     children: <Widget>[
                       TextFormField(
+                        controller: ctrlUsername,
+                        validator: (String value) {
+                          if (value.isEmpty) {
+                            return 'กรุณาระบุชื่อผู้ใช้งาน';
+                          }
+
+                          return null;
+                        },
                         style: TextStyle(fontSize: 22),
                         decoration: InputDecoration(
                             border: InputBorder.none,
                             fillColor: Colors.white,
                             filled: true,
                             labelText: 'ชื่อผู้ใช้งาน',
-                            labelStyle: TextStyle(fontSize: 20)),
+                            labelStyle: TextStyle(fontSize: 20),
+                            errorStyle: TextStyle(fontSize: 18)),
                       ),
                       SizedBox(
                         height: 5,
                       ),
                       TextFormField(
+                        controller: ctrlPassword,
+                        validator: (String value) {
+                          if (value.isEmpty) {
+                            return 'กรุณาระบุรหัสผ่าน';
+                          }
+
+                          return null;
+                        },
                         style: TextStyle(fontSize: 22),
                         obscureText: true,
                         decoration: InputDecoration(
@@ -69,7 +95,8 @@ class _LoginPageState extends State<LoginPage> {
                             fillColor: Colors.white,
                             filled: true,
                             labelText: 'รหัสผ่าน',
-                            labelStyle: TextStyle(fontSize: 20)),
+                            labelStyle: TextStyle(fontSize: 20),
+                            errorStyle: TextStyle(fontSize: 18)),
                       ),
                       SizedBox(
                         height: 20,
@@ -79,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                           Expanded(
                             child: RaisedButton(
                                 padding: EdgeInsets.all(15),
-                                onPressed: () {},
+                                onPressed: () => doLogin(),
                                 child: Text('เข้าสู่ระบบ',
                                     style: TextStyle(
                                         fontSize: 20,
@@ -101,5 +128,26 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     );
+  }
+
+  Future doLogin() async {
+    if (_formKey.currentState.validate()) {
+      // valid
+      String username = ctrlUsername.text;
+      String password = ctrlPassword.text;
+
+      try {
+        var rs = await api.login(username, password);
+        print(rs.body);
+
+        if (rs.statusCode == 200) {
+          var decoded = convert.jsonDecode(rs.body);
+        } else {
+          // Network error
+        }
+      } catch (error) {
+        print(error);
+      }
+    } else {}
   }
 }
