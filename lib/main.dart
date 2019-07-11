@@ -8,7 +8,12 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          primaryColor: Colors.purple, accentColor: Color(0xff7200ca)),
+          fontFamily: 'Sarabun',
+          textTheme: TextTheme(
+              body1: TextStyle(fontSize: 18),
+              headline: TextStyle(fontSize: 25)),
+          primaryColor: Colors.purple,
+          accentColor: Color(0xff7200ca)),
       title: 'ระบบลาหยุดราชการ',
       home: HomePage(),
     );
