@@ -17,8 +17,8 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
     DateTime _startDate = DateTime.parse(widget.leave['start_date'].toString());
     DateTime _endDate = DateTime.parse(widget.leave['end_date'].toString());
 
-    String startDate = helper.toLongThaiDate(_startDate);
-    String endDate = helper.toLongThaiDate(_endDate);
+    String startDate = helper.toShortThaiDate(_startDate);
+    String endDate = helper.toShortThaiDate(_endDate);
 
     Widget _infoWidget = ListView(
       children: <Widget>[

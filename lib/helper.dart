@@ -10,4 +10,12 @@ class Helper {
     // return thai date
     return _strDate;
   }
+
+  toShortThaiDate(DateTime date) {
+    // create format
+    var strDate = new DateFormat.MMMd('th_TH').format(date);
+    var _strDate = '$strDate ${date.year + 543}';
+    // return thai date
+    return _strDate;
+  }
 }
