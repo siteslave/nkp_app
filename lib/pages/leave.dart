@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nkp_leave/pages/leave-info.dart';
 
 class LeavePage extends StatefulWidget {
   @override
@@ -29,6 +30,12 @@ class _LeavePageState extends State<LeavePage> {
                       color: Colors.purple[50],
                       borderRadius: BorderRadius.all(Radius.circular(5))),
                   child: ListTile(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              LeaveInfoPage('1', 'สถิตย์ เรียนพิศ'),
+                          fullscreenDialog: false));
+                    },
                     title: Text(
                       'นายสถิตย์ เรียนพิศ',
                       style: TextStyle(fontSize: 22),
@@ -36,11 +43,14 @@ class _LeavePageState extends State<LeavePage> {
                     subtitle: Text('ศูนย์คอมพิวเตอร์'),
                     leading: CircleAvatar(
                       backgroundColor: Colors.purple,
-                      child: Text('SR'),
+                      child: Icon(
+                        Icons.account_circle,
+                        color: Colors.white,
+                      ),
                     ),
                     trailing: Icon(
                       Icons.arrow_forward_ios,
-                      color: Colors.purple[900],
+                      color: Colors.purple[800],
                     ),
                   ),
                 );
