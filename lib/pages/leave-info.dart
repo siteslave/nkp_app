@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nkp_leave/helper.dart';
 
 class LeaveInfoPage extends StatefulWidget {
   final Map leave;
@@ -9,8 +10,60 @@ class LeaveInfoPage extends StatefulWidget {
 }
 
 class _LeaveInfoPageState extends State<LeaveInfoPage> {
+  Helper helper = Helper();
+
   @override
   Widget build(BuildContext context) {
+    DateTime _startDate = DateTime.parse(widget.leave['start_date'].toString());
+    DateTime _endDate = DateTime.parse(widget.leave['end_date'].toString());
+
+    String startDate = helper.toLongThaiDate(_startDate);
+    String endDate = helper.toLongThaiDate(_endDate);
+
+    Widget _infoWidget = ListView(
+      children: <Widget>[
+        SizedBox(
+          height: 10,
+        ),
+        Container(
+          height: 60,
+          margin: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              color: Colors.purple[100],
+              borderRadius: BorderRadius.circular(10)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text('ประเภท'),
+              Text(
+                '${widget.leave['leave_type_name']}',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+        ),
+        Container(
+          height: 60,
+          margin: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              color: Colors.purple[100],
+              borderRadius: BorderRadius.circular(10)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text('ช่วงเวลา'),
+              Text(
+                '$startDate - $endDate',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -32,7 +85,7 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
         ),
         body: TabBarView(
           children: [
-            Icon(Icons.directions_car),
+            _infoWidget,
             Icon(Icons.directions_transit),
             Icon(Icons.directions_bike),
           ],

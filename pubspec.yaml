@@ -27,6 +27,9 @@ dependencies:
   fluttertoast: ^3.1.0
   flutter_secure_storage: ^3.2.1+1
 
+  flutter_localizations:
+    sdk: flutter
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
