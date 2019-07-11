@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                'NKP LEAVE SYSTEM',
+                'โรงพยาบาลนครพิงค์',
                 style: TextStyle(color: Colors.white, fontSize: 22),
               ),
               Text(
