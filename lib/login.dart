@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:nkp_leave/api.dart';
 import 'dart:convert' as convert;
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import 'package:nkp_leave/home.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,6 +13,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+  final storage = new FlutterSecureStorage();
+
   Api api = Api();
 
   TextEditingController ctrlUsername = TextEditingController();
@@ -48,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Container(
                 margin: EdgeInsets.all(10),
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.all(10),
                 // height: 280,
                 width: 400,
                 decoration: BoxDecoration(
@@ -142,11 +148,41 @@ class _LoginPageState extends State<LoginPage> {
 
         if (rs.statusCode == 200) {
           var decoded = convert.jsonDecode(rs.body);
+          if (decoded['ok']) {
+            await storage.write(key: 'token', value: decoded['token']);
+            // redirect to home
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (BuildContext context) => HomePage()));
+          } else {
+            Fluttertoast.showToast(
+                msg: "${decoded['error']}",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 18);
+          }
         } else {
-          // Network error
+          Fluttertoast.showToast(
+              msg: "เกิดข้อผิดพลาด (SEVER)",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIos: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 18);
         }
       } catch (error) {
         print(error);
+        Fluttertoast.showToast(
+            msg: "เกิดข้อผิดพลาดในการเชื่อมต่อ",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIos: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 18);
       }
     } else {}
   }
