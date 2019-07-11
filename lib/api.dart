@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
 
 class Api {
@@ -14,5 +16,12 @@ class Api {
     };
 
     return await http.post(url, body: body);
+  }
+
+  Future getLeaveDraft(String token) async {
+    String url = '$apiUrl/services/manager/leaves?limit=20&offset=0&status=DRAFT';
+    return await http.get(url, headers: {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+      });
   }
 }

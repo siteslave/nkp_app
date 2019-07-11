@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:nkp_leave/api.dart';
+import 'dart:convert' as convert;
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import 'package:nkp_leave/pages/leave-info.dart';
 
 class LeavePage extends StatefulWidget {
@@ -7,6 +12,65 @@ class LeavePage extends StatefulWidget {
 }
 
 class _LeavePageState extends State<LeavePage> {
+  final storage = new FlutterSecureStorage();
+
+  Api api = Api();
+
+  List items = [];
+
+  Future getLeaveDraft() async {
+    String token = await storage.read(key: 'token');
+
+    try {
+      var rs = await api.getLeaveDraft(token);
+
+      print(rs.body);
+
+      if (rs.statusCode == 200) {
+        var decoded = convert.jsonDecode(rs.body);
+        if (decoded['ok']) {
+          setState(() {
+            items = decoded['rows'];
+          });
+        } else {
+          Fluttertoast.showToast(
+              msg: "${decoded['error']}",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIos: 3,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 18);
+        }
+      } else {
+        Fluttertoast.showToast(
+            msg: "เกิดข้อผิดพลาด (SEVER)",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIos: 3,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 18);
+      }
+    } catch (error) {
+      print(error);
+      Fluttertoast.showToast(
+          msg: "เกิดข้อผิดพลาดในการเชื่อมต่อ",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIos: 3,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 18);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getLeaveDraft();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,6 +86,8 @@ class _LeavePageState extends State<LeavePage> {
           Expanded(
             child: ListView.builder(
               itemBuilder: (BuildContext context, int index) {
+                var item = items[index];
+
                 return Container(
                   padding: EdgeInsets.all(5),
                   margin:
@@ -32,15 +98,16 @@ class _LeavePageState extends State<LeavePage> {
                   child: ListTile(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              LeaveInfoPage('1', 'สถิตย์ เรียนพิศ'),
+                          builder: (BuildContext context) => LeaveInfoPage(
+                              item['leave_id'].toString(),
+                              '${item['first_name']} ${item['last_name']}'),
                           fullscreenDialog: false));
                     },
                     title: Text(
-                      'นายสถิตย์ เรียนพิศ',
+                      '${item['first_name']} ${item['last_name']}',
                       style: TextStyle(fontSize: 22),
                     ),
-                    subtitle: Text('ศูนย์คอมพิวเตอร์'),
+                    subtitle: Text('${item['sub_department_name']}'),
                     leading: CircleAvatar(
                       backgroundColor: Colors.purple,
                       child: Icon(
@@ -55,7 +122,7 @@ class _LeavePageState extends State<LeavePage> {
                   ),
                 );
               },
-              itemCount: 5,
+              itemCount: items.length,
             ),
           )
         ],

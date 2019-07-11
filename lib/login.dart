@@ -177,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
         print(error);
         Fluttertoast.showToast(
             msg: "เกิดข้อผิดพลาดในการเชื่อมต่อ",
-            toastLength: Toast.LENGTH_SHORT,
+            toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.CENTER,
             timeInSecForIos: 1,
             backgroundColor: Colors.red,
