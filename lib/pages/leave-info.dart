@@ -214,6 +214,65 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
       ],
     );
 
+    Widget _summaryWidget = ListView.builder(
+        itemBuilder: (BuildContext contex, int index) {
+          return Container(
+            margin: EdgeInsets.only(top: 10, bottom: 5, left: 10, right: 10),
+            padding: EdgeInsets.all(3),
+            decoration: BoxDecoration(
+                color: Colors.purple[100],
+                borderRadius: BorderRadius.circular(10)),
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'ลาพักผ่อน',
+                    style: TextStyle(
+                        color: Colors.purple[900],
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                // Divider(),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text('สิทธิ์ที่ได้'),
+                          Text('10 วัน')
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[Text('ใช้ไปแล้ว'), Text('10 วัน')],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[Text('คงเหลือ'), Text('10 วัน')],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text('วันลาล่าสุด'),
+                          Text('10 มิ.ย. 2562')
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          );
+        },
+        itemCount: 5);
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -237,7 +296,7 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
           children: [
             _infoWidget,
             _historyWidget,
-            Icon(Icons.directions_bike),
+            _summaryWidget,
           ],
         ),
       ),
