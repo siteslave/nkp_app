@@ -21,6 +21,7 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
   Api api = Api();
 
   List histories = [];
+  List summaries = [];
 
   @override
   void initState() {
@@ -216,18 +217,41 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
 
     Widget _summaryWidget = ListView.builder(
         itemBuilder: (BuildContext contex, int index) {
+          var item = summaries[index];
+          String lastDay = '-';
+
+          if (item['last_leave_day'] != null) {
+            DateTime _lastDay =
+                DateTime.parse(item['last_leave_day'].toString());
+            String day = helper.toShortThaiDate(_lastDay);
+            lastDay = day;
+          }
+
+          String remainDay = 'ไม่จำกัด';
+          String totalDay = 'ไม่จำกัด';
+
+          if (item['leave_days_num'] != 0) {
+            totalDay = item['leave_days_num'].toString();
+          }
+
+          if (item['leave_days_num'] != 0) {
+            int _remain = item['leave_days_num'] - item['current_leave'];
+
+            remainDay = _remain.toString();
+          }
+
           return Container(
             margin: EdgeInsets.only(top: 10, bottom: 5, left: 10, right: 10),
             padding: EdgeInsets.all(3),
             decoration: BoxDecoration(
-                color: Colors.purple[100],
+                color: Colors.purple[50],
                 borderRadius: BorderRadius.circular(10)),
             child: Column(
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'ลาพักผ่อน',
+                    '${item['leave_type_name']}',
                     style: TextStyle(
                         color: Colors.purple[900],
                         fontSize: 20,
@@ -246,22 +270,28 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text('สิทธิ์ที่ได้'),
-                          Text('10 วัน')
+                          Text('$totalDay วัน')
                         ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[Text('ใช้ไปแล้ว'), Text('10 วัน')],
+                        children: <Widget>[
+                          Text('ใช้ไปแล้ว'),
+                          Text('${item['current_leave']} วัน')
+                        ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[Text('คงเหลือ'), Text('10 วัน')],
+                        children: <Widget>[
+                          Text('คงเหลือ'),
+                          Text('$remainDay วัน')
+                        ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text('วันลาล่าสุด'),
-                          Text('10 มิ.ย. 2562')
+                          Text('$lastDay')
                         ],
                       ),
                     ],
@@ -271,7 +301,7 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
             ),
           );
         },
-        itemCount: 5);
+        itemCount: summaries.length);
 
     return DefaultTabController(
       length: 3,
@@ -370,6 +400,7 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
         if (decoded['ok']) {
           setState(() {
             histories = decoded['rows'];
+            summaries = decoded['summary'];
           });
         } else {
           Fluttertoast.showToast(
@@ -383,7 +414,7 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
         }
       } else {
         Fluttertoast.showToast(
-            msg: "เกิดข้อผิดพลา���ในการเชื่อมต่อ",
+            msg: "เกิดข้อผิดพลาดในการเชื่อมต่อ",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.CENTER,
             timeInSecForIos: 3,
