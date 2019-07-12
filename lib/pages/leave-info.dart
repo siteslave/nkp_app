@@ -23,6 +23,8 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
   List histories = [];
   List summaries = [];
 
+  String profileImage = '';
+
   String token = '';
 
   Future getToken() async {
@@ -321,14 +323,29 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
           child: Column(
             children: <Widget>[
               Container(
-                height: 100,
-                width: 100,
+                margin: EdgeInsets.all(20),
+                height: 120,
+                width: 120,
                 decoration: BoxDecoration(
                     color: Colors.purple,
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                        image: NetworkImage(imageUrl), fit: BoxFit.cover)),
-              )
+                        image: profileImage == null
+                            ? AssetImage('assets/images/female-placeholder.jpg')
+                            : NetworkImage(imageUrl),
+                        fit: BoxFit.cover)),
+              ),
+              Text('${widget.leave['first_name']} ${widget.leave['last_name']}',
+                  style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.purple)),
+              SizedBox(
+                height: 10,
+              ),
+              Text('ตำแหน่ง${widget.leave['position_name']}'),
+              // Text('${widget.leave['department_name']}'),
+              Text('${widget.leave['sub_department_name']}')
             ],
           ),
         )
@@ -433,6 +450,7 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
 
         if (decoded['ok']) {
           setState(() {
+            profileImage = decoded['info']['image_path'];
             histories = decoded['rows'];
             summaries = decoded['summary'];
           });
