@@ -23,10 +23,19 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
   List histories = [];
   List summaries = [];
 
+  String token = '';
+
+  Future getToken() async {
+    String _token = await storage.read(key: 'token');
+    setState(() {
+      token = _token;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-
+    getToken();
     getLeave(widget.leave['employee_id'].toString());
   }
 
@@ -303,8 +312,31 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
         },
         itemCount: summaries.length);
 
+    String imageUrl =
+        '${api.apiUrl}/services/manager/employee/${widget.leave['employee_id']}/image?token=$token';
+    Widget _profileWidget = ListView(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: <Widget>[
+              Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                    color: Colors.purple,
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: NetworkImage(imageUrl), fit: BoxFit.cover)),
+              )
+            ],
+          ),
+        )
+      ],
+    );
+
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           bottom: TabBar(
@@ -317,6 +349,7 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
               ),
               Tab(icon: Icon(Icons.history), text: 'ประวัติ'),
               Tab(icon: Icon(Icons.account_balance_wallet), text: 'สรุป'),
+              Tab(icon: Icon(Icons.person_pin), text: 'ข้อมูล'),
             ],
           ),
           title: Text(
@@ -327,6 +360,7 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
             _infoWidget,
             _historyWidget,
             _summaryWidget,
+            _profileWidget,
           ],
         ),
       ),
