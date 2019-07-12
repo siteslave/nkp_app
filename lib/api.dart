@@ -33,4 +33,10 @@ class Api {
     return await http
         .get(url, headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
   }
+
+  Future getLeave(String token, String employeeId) async {
+    String url = '$apiUrl/leaves/$employeeId/history';
+    return await http
+        .get(url, headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+  }
 }

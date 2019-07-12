@@ -41,7 +41,7 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
                 margin: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                    color: Colors.purple[100],
+                    color: Colors.purple[50],
                     borderRadius: BorderRadius.circular(10)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -59,7 +59,7 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
                 margin: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                    color: Colors.purple[100],
+                    color: Colors.purple[50],
                     borderRadius: BorderRadius.circular(10)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -77,7 +77,7 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
                 margin: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                    color: Colors.purple[100],
+                    color: Colors.purple[50],
                     borderRadius: BorderRadius.circular(10)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -95,7 +95,7 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
                 margin: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                    color: Colors.purple[100],
+                    color: Colors.purple[50],
                     borderRadius: BorderRadius.circular(10)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -146,6 +146,57 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
       ],
     );
 
+    Widget _historyWidget = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 15, left: 10),
+          child: Text('ประวัติการลา (5 ครั้ง)',
+              style: TextStyle(
+                  color: Colors.purple[700],
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold)),
+        ),
+        Expanded(
+            child: ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            return Container(
+              margin: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.purple[50],
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.purple,
+                  child: Icon(
+                    Icons.check,
+                    color: Colors.white,
+                  ),
+                ),
+                title: Text(
+                  'ลากิจ',
+                  style: TextStyle(
+                      color: Colors.purple[700],
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text('12 ก.ค. 2562 - 13 ก.ค. 2562',
+                    style: TextStyle(color: Colors.purple[400], fontSize: 18)),
+                trailing: Text('2 วัน',
+                    style: TextStyle(
+                        color: Colors.purple[700],
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold)),
+              ),
+            );
+          },
+          itemCount: 5,
+        ))
+      ],
+    );
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -168,7 +219,7 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
         body: TabBarView(
           children: [
             _infoWidget,
-            Icon(Icons.directions_transit),
+            _historyWidget,
             Icon(Icons.directions_bike),
           ],
         ),
@@ -212,7 +263,7 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
         }
       } else {
         Fluttertoast.showToast(
-            msg: "เกิดข้อผิดพลาดในการเชื่อมต่อ",
+            msg: "เกิดข้อผิดพลา���ในการเชื่อมต่อ",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.CENTER,
             timeInSecForIos: 3,
