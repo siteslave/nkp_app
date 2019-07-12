@@ -30,6 +30,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  firebase_messaging: ^5.1.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
