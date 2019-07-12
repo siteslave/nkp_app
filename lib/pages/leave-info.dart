@@ -20,6 +20,15 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
 
   Api api = Api();
 
+  List histories = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    getLeave(widget.leave['employee_id'].toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     DateTime _startDate = DateTime.parse(widget.leave['start_date'].toString());
@@ -151,7 +160,7 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(top: 15, left: 10),
-          child: Text('ประวัติการลา (5 ครั้ง)',
+          child: Text('ประวัติการลา (${histories.length} ครั้ง)',
               style: TextStyle(
                   color: Colors.purple[700],
                   fontSize: 20,
@@ -160,6 +169,14 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
         Expanded(
             child: ListView.builder(
           itemBuilder: (BuildContext context, int index) {
+            var item = histories[index];
+
+            DateTime _startDate = DateTime.parse(item['start_date'].toString());
+            DateTime _endDate = DateTime.parse(item['end_date'].toString());
+
+            String startDate = helper.toShortThaiDate(_startDate);
+            String endDate = helper.toShortThaiDate(_endDate);
+
             return Container(
               margin: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
               padding: EdgeInsets.all(10),
@@ -176,15 +193,15 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
                   ),
                 ),
                 title: Text(
-                  'ลากิจ',
+                  '${item['leave_type_name']}',
                   style: TextStyle(
                       color: Colors.purple[700],
                       fontSize: 20,
                       fontWeight: FontWeight.bold),
                 ),
-                subtitle: Text('12 ก.ค. 2562 - 13 ก.ค. 2562',
+                subtitle: Text('$startDate - $endDate',
                     style: TextStyle(color: Colors.purple[400], fontSize: 18)),
-                trailing: Text('2 วัน',
+                trailing: Text('${item['leave_days']} วัน',
                     style: TextStyle(
                         color: Colors.purple[700],
                         fontSize: 20,
@@ -192,7 +209,7 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
               ),
             );
           },
-          itemCount: 5,
+          itemCount: histories.length,
         ))
       ],
     );
@@ -251,6 +268,50 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
               fontSize: 18);
 
           Navigator.of(context).pop(true);
+        } else {
+          Fluttertoast.showToast(
+              msg: "${decoded['error']}",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIos: 3,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 18);
+        }
+      } else {
+        Fluttertoast.showToast(
+            msg: "เกิดข้อผิดพลา���ในการเชื่อมต่อ",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIos: 3,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 18);
+      }
+    } catch (error) {
+      print(error);
+      Fluttertoast.showToast(
+          msg: "เกิดข้อผิดพลาด",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIos: 3,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 18);
+    }
+  }
+
+  Future getLeave(String employeeId) async {
+    try {
+      String token = await storage.read(key: 'token');
+      var rs = await api.getLeave(token, employeeId);
+      if (rs.statusCode == 200) {
+        var decoded = convert.jsonDecode(rs.body);
+
+        if (decoded['ok']) {
+          setState(() {
+            histories = decoded['rows'];
+          });
         } else {
           Fluttertoast.showToast(
               msg: "${decoded['error']}",
