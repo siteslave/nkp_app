@@ -179,50 +179,61 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
                   fontWeight: FontWeight.bold)),
         ),
         Expanded(
-            child: ListView.builder(
-          itemBuilder: (BuildContext context, int index) {
-            var item = histories[index];
+            child: histories.length == 0
+                ? Center(
+                    child: Text(
+                      'ไม่พบประวัติ',
+                      style: TextStyle(fontSize: 20, color: Colors.grey),
+                    ),
+                  )
+                : ListView.builder(
+                    itemBuilder: (BuildContext context, int index) {
+                      var item = histories[index];
 
-            DateTime _startDate = DateTime.parse(item['start_date'].toString());
-            DateTime _endDate = DateTime.parse(item['end_date'].toString());
+                      DateTime _startDate =
+                          DateTime.parse(item['start_date'].toString());
+                      DateTime _endDate =
+                          DateTime.parse(item['end_date'].toString());
 
-            String startDate = helper.toShortThaiDate(_startDate);
-            String endDate = helper.toShortThaiDate(_endDate);
+                      String startDate = helper.toShortThaiDate(_startDate);
+                      String endDate = helper.toShortThaiDate(_endDate);
 
-            return Container(
-              margin: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.purple[50],
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Colors.purple,
-                  child: Icon(
-                    Icons.check,
-                    color: Colors.white,
-                  ),
-                ),
-                title: Text(
-                  '${item['leave_type_name']}',
-                  style: TextStyle(
-                      color: Colors.purple[700],
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text('$startDate - $endDate',
-                    style: TextStyle(color: Colors.purple[400], fontSize: 18)),
-                trailing: Text('${item['leave_days']} วัน',
-                    style: TextStyle(
-                        color: Colors.purple[700],
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold)),
-              ),
-            );
-          },
-          itemCount: histories.length,
-        ))
+                      return Container(
+                        margin: EdgeInsets.only(
+                            top: 5, bottom: 5, left: 10, right: 10),
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.purple[50],
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.purple,
+                            child: Icon(
+                              Icons.check,
+                              color: Colors.white,
+                            ),
+                          ),
+                          title: Text(
+                            '${item['leave_type_name']}',
+                            style: TextStyle(
+                                color: Colors.purple[700],
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Text('$startDate - $endDate',
+                              style: TextStyle(
+                                  color: Colors.purple[400], fontSize: 18)),
+                          trailing: Text('${item['leave_days']} วัน',
+                              style: TextStyle(
+                                  color: Colors.purple[700],
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      );
+                    },
+                    itemCount: histories.length,
+                  ))
       ],
     );
 
