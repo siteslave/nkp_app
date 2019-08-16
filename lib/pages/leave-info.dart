@@ -354,7 +354,7 @@ class _LeaveInfoPageState extends State<LeaveInfoPage> {
               SizedBox(
                 height: 10,
               ),
-              Text('ตำแหน่ง${widget.leave['position_name']}'),
+              Text('${widget.leave['position_name']}'),
               // Text('${widget.leave['department_name']}'),
               Text('${widget.leave['sub_department_name']}')
             ],

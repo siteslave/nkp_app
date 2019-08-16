@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 class Api {
   Api();
 
-  String apiUrl = 'http://172.168.17.182:3000';
+  String apiUrl = 'http://192.168.4.107:3000';
 
   Future login(String username, String password) async {
     String url = '$apiUrl/login';
@@ -21,6 +21,15 @@ class Api {
   Future changeStatus(String token, String leaveId, String status) async {
     String url = '$apiUrl/services/manager/leaves/status';
     Map body = {"leaveId": leaveId.toString(), "status": status.toString()};
+
+    return await http.post(url,
+        body: body,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+  }
+
+  Future saveDeviceToken(String token, String deviceToken) async {
+    String url = '$apiUrl/services/manager/save-device-token';
+    Map body = {"deviceToken": deviceToken.toString()};
 
     return await http.post(url,
         body: body,
